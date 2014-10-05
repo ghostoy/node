@@ -192,10 +192,10 @@ namespace node {
 
 NODE_EXTERN extern bool no_deprecation;
 
-NODE_EXTERN void SetupUv(int argc, char **argv);
-NODE_EXTERN void SetupContext(int argc, char *argv[], v8::Handle<v8::Context> ctx);
-NODE_EXTERN void Shutdown();
-NODE_EXTERN int Start(int argc, char *argv[]);
+extern void SetupUv(int argc, char **argv);
+extern void SetupContext(int argc, char *argv[], v8::Handle<v8::Context> ctx);
+extern void Shutdown();
+extern int Start(int argc, char *argv[]);
 
 /* Converts a unixtime to V8 Date */
 #define NODE_UNIXTIME_V8(t) v8::Date::New(1000*static_cast<double>(t))
