@@ -137,7 +137,7 @@ static int rc4_hmac_md5_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
 
         if (plen > md5_off && (blocks = (plen - md5_off) / MD5_CBLOCK) &&
             (OPENSSL_ia32cap_P[0] & (1 << 20)) == 0) {
-            MD5_Update(&key->md, in, md5_off);
+            OpensslMD5_Update(&key->md, in, md5_off);
             RC4(&key->ks, rc4_off, in, out);
 
             rc4_md5_enc(&key->ks, in + rc4_off, out + rc4_off,
@@ -154,7 +154,7 @@ static int rc4_hmac_md5_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
             md5_off = 0;
         }
 # endif
-        MD5_Update(&key->md, in + md5_off, plen - md5_off);
+        OpensslMD5_Update(&key->md, in + md5_off, plen - md5_off);
 
         if (plen != len) {      /* "TLS" mode of operation */
             if (in != out)
@@ -163,7 +163,7 @@ static int rc4_hmac_md5_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
             /* calculate HMAC and append it to payload */
             MD5_Final(out + plen, &key->md);
             key->md = key->tail;
-            MD5_Update(&key->md, out + plen, MD5_DIGEST_LENGTH);
+            OpensslMD5_Update(&key->md, out + plen, MD5_DIGEST_LENGTH);
             MD5_Final(out + plen, &key->md);
             /* encrypt HMAC at once */
             RC4(&key->ks, len - rc4_off, out + rc4_off, out + rc4_off);
@@ -182,7 +182,7 @@ static int rc4_hmac_md5_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         if (len > rc4_off && (blocks = (len - rc4_off) / MD5_CBLOCK) &&
             (OPENSSL_ia32cap_P[0] & (1 << 20)) == 0) {
             RC4(&key->ks, rc4_off, in, out);
-            MD5_Update(&key->md, out, md5_off);
+            OpensslMD5_Update(&key->md, out, md5_off);
 
             rc4_md5_enc(&key->ks, in + rc4_off, out + rc4_off,
                         &key->md, out + md5_off, blocks);
@@ -202,18 +202,18 @@ static int rc4_hmac_md5_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out,
         /* decrypt HMAC at once */
         RC4(&key->ks, len - rc4_off, in + rc4_off, out + rc4_off);
         if (plen != NO_PAYLOAD_LENGTH) { /* "TLS" mode of operation */
-            MD5_Update(&key->md, out + md5_off, plen - md5_off);
+            OpensslMD5_Update(&key->md, out + md5_off, plen - md5_off);
 
             /* calculate HMAC and verify it */
             MD5_Final(mac, &key->md);
             key->md = key->tail;
-            MD5_Update(&key->md, mac, MD5_DIGEST_LENGTH);
+            OpensslMD5_Update(&key->md, mac, MD5_DIGEST_LENGTH);
             MD5_Final(mac, &key->md);
 
             if (memcmp(out + plen, mac, MD5_DIGEST_LENGTH))
                 return 0;
         } else {
-            MD5_Update(&key->md, out + md5_off, len - md5_off);
+            OpensslMD5_Update(&key->md, out + md5_off, len - md5_off);
         }
     }
 
@@ -237,7 +237,7 @@ static int rc4_hmac_md5_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
 
             if (arg > (int)sizeof(hmac_key)) {
                 MD5_Init(&key->head);
-                MD5_Update(&key->head, ptr, arg);
+                OpensslMD5_Update(&key->head, ptr, arg);
                 MD5_Final(hmac_key, &key->head);
             } else {
                 memcpy(hmac_key, ptr, arg);
@@ -246,12 +246,12 @@ static int rc4_hmac_md5_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
             for (i = 0; i < sizeof(hmac_key); i++)
                 hmac_key[i] ^= 0x36; /* ipad */
             MD5_Init(&key->head);
-            MD5_Update(&key->head, hmac_key, sizeof(hmac_key));
+            OpensslMD5_Update(&key->head, hmac_key, sizeof(hmac_key));
 
             for (i = 0; i < sizeof(hmac_key); i++)
                 hmac_key[i] ^= 0x36 ^ 0x5c; /* opad */
             MD5_Init(&key->tail);
-            MD5_Update(&key->tail, hmac_key, sizeof(hmac_key));
+            OpensslMD5_Update(&key->tail, hmac_key, sizeof(hmac_key));
 
             return 1;
         }
@@ -267,7 +267,7 @@ static int rc4_hmac_md5_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg,
             }
             key->payload_length = len;
             key->md = key->head;
-            MD5_Update(&key->md, p, arg);
+            OpensslMD5_Update(&key->md, p, arg);
 
             return MD5_DIGEST_LENGTH;
         }

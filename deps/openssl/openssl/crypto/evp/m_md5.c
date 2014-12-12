@@ -77,7 +77,7 @@ static int init(EVP_MD_CTX *ctx)
 
 static int update(EVP_MD_CTX *ctx, const void *data, size_t count)
 {
-    return MD5_Update(ctx->md_data, data, count);
+    return OpensslMD5_Update(ctx->md_data, data, count);
 }
 
 static int final(EVP_MD_CTX *ctx, unsigned char *md)

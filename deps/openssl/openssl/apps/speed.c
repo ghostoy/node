@@ -1301,7 +1301,7 @@ int MAIN(int argc, char **argv)
     idea_set_encrypt_key(key16, &idea_ks);
 # endif
 # ifndef OPENSSL_NO_SEED
-    SEED_set_key(key16, &seed_ks);
+    OpensslSEED_set_key(key16, &seed_ks);
 # endif
 # ifndef OPENSSL_NO_RC4
     RC4_set_key(&rc4_ks, 16, key16);
@@ -1599,15 +1599,15 @@ int MAIN(int argc, char **argv)
         HMAC_CTX hctx;
 
         HMAC_CTX_init(&hctx);
-        HMAC_Init_ex(&hctx, (unsigned char *)"This is a key...",
+        OpensslHMAC_Init_ex(&hctx, (unsigned char *)"This is a key...",
                      16, EVP_md5(), NULL);
 
         for (j = 0; j < SIZE_NUM; j++) {
             print_message(names[D_HMAC], c[D_HMAC][j], lengths[j]);
             Time_F(START);
             for (count = 0, run = 1; COND(c[D_HMAC][j]); count++) {
-                HMAC_Init_ex(&hctx, NULL, 0, NULL, NULL);
-                HMAC_Update(&hctx, buf, lengths[j]);
+                OpensslHMAC_Init_ex(&hctx, NULL, 0, NULL, NULL);
+                OpensslHMAC_Update(&hctx, buf, lengths[j]);
                 HMAC_Final(&hctx, &(hmac[0]), NULL);
             }
             d = Time_F(STOP);
@@ -1876,7 +1876,7 @@ int MAIN(int argc, char **argv)
             print_message(names[D_CBC_SEED], c[D_CBC_SEED][j], lengths[j]);
             Time_F(START);
             for (count = 0, run = 1; COND(c[D_CBC_SEED][j]); count++)
-                SEED_cbc_encrypt(buf, buf,
+                OpensslSEED_cbc_encrypt(buf, buf,
                                  (unsigned long)lengths[j], &seed_ks, iv, 1);
             d = Time_F(STOP);
             print_result(D_CBC_SEED, j, count, d);

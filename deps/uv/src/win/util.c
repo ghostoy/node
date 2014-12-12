@@ -23,6 +23,7 @@
 #include <direct.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <wchar.h>
@@ -37,6 +38,8 @@
 #include <tlhelp32.h>
 #include <windows.h>
 
+#include <WTypes.h>
+#include <WinPerf.h>
 
 /*
  * Max title length; the only thing MSDN tells us about the maximum length

@@ -134,7 +134,7 @@ static void hashlength(SHA_CTX *sha, size_t l)
     OPENSSL_assert(l <= 0xffff);
     b[0] = l >> 8;
     b[1] = l & 0xff;
-    SHA1_Update(sha, b, 2);
+    OpensslSHA1_Update(sha, b, 2);
 }
 
 static void hashstring(SHA_CTX *sha, const char *string)
@@ -142,7 +142,7 @@ static void hashstring(SHA_CTX *sha, const char *string)
     size_t l = strlen(string);
 
     hashlength(sha, l);
-    SHA1_Update(sha, string, l);
+    OpensslSHA1_Update(sha, string, l);
 }
 
 static void hashbn(SHA_CTX *sha, const BIGNUM *bn)
@@ -152,7 +152,7 @@ static void hashbn(SHA_CTX *sha, const BIGNUM *bn)
 
     hashlength(sha, l);
     BN_bn2bin(bn, bin);
-    SHA1_Update(sha, bin, l);
+    OpensslSHA1_Update(sha, bin, l);
     OPENSSL_free(bin);
 }
 

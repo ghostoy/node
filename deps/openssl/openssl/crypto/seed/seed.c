@@ -549,7 +549,7 @@ static const seed_word KC[] = {
     KC8, KC9, KC10, KC11, KC12, KC13, KC14, KC15
 };
 # endif
-void SEED_set_key(const unsigned char rawkey[SEED_KEY_LENGTH],
+void OpensslSEED_set_key(const unsigned char rawkey[SEED_KEY_LENGTH],
                   SEED_KEY_SCHEDULE *ks)
 # ifdef OPENSSL_FIPS
 {
@@ -617,7 +617,7 @@ void private_SEED_set_key(const unsigned char rawkey[SEED_KEY_LENGTH],
 # endif
 }
 
-void SEED_encrypt(const unsigned char s[SEED_BLOCK_SIZE],
+void OpensslSEED_encrypt(const unsigned char s[SEED_BLOCK_SIZE],
                   unsigned char d[SEED_BLOCK_SIZE],
                   const SEED_KEY_SCHEDULE *ks)
 {
@@ -662,7 +662,7 @@ void SEED_encrypt(const unsigned char s[SEED_BLOCK_SIZE],
     word2char(x2, d + 12);
 }
 
-void SEED_decrypt(const unsigned char s[SEED_BLOCK_SIZE],
+void OpensslSEED_decrypt(const unsigned char s[SEED_BLOCK_SIZE],
                   unsigned char d[SEED_BLOCK_SIZE],
                   const SEED_KEY_SCHEDULE *ks)
 {
